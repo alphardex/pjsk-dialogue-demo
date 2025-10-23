@@ -267,7 +267,7 @@
       playDialog(currentDialogId);
     }, 1000);
 
-    window.addEventListener("click", () => {
+    document.body.addEventListener("click", () => {
       if (!isModelLoaded) {
         return;
       }
