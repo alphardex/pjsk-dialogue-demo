@@ -1,0 +1,49 @@
+{
+  "Version": 3,
+  "FileReferences": {
+    "Moc": "18mafuyu_darkcloth001_3.0_f_t03.moc3",
+    "Textures": [
+      "18mafuyu_darkcloth001_3.0_f_t03.2048/texture_00.png"
+    ],
+    "Physics": "18mafuyu_darkcloth001_3.0_f_t03.physics3.json",
+    "Motions": {
+      "w-normal-sigh01": [
+        {
+          "File": "motion/w-normal-sigh01.motion3.json"
+        }
+      ],
+      "w-normal-forward03": [
+        {
+          "File": "motion/w-normal-forward03.motion3.json"
+        }
+      ],
+      "w-normal-fidget01": [
+        {
+          "File": "motion/w-normal-fidget01.motion3.json"
+        }
+      ],
+      "face_baffling_01": [
+        {
+          "File": "facial/face_baffling_01.motion3.json"
+        }
+      ]
+    }
+  },
+  "Groups": [
+    {
+      "Target": "Parameter",
+      "Name": "LipSync",
+      "Ids": [
+        "ParamMouthOpenY"
+      ]
+    },
+    {
+      "Target": "Parameter",
+      "Name": "EyeBlink",
+      "Ids": [
+        "ParamEyeLOpen",
+        "ParamEyeROpen"
+      ]
+    }
+  ]
+}

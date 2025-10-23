@@ -1,0 +1,49 @@
+{
+  "Version": 3,
+  "FileReferences": {
+    "Moc": "17kanade_normal_3.1_f_t02.moc3",
+    "Textures": [
+      "17kanade_normal_3.1_f_t02.2048/texture_00.png"
+    ],
+    "Physics": "17kanade_normal_3.1_f_t02.physics3.json",
+    "Motions": {
+      "w-normal-forward01": [
+        {
+          "File": "motion/w-normal-forward01.motion3.json"
+        }
+      ],
+      "face_serious_01": [
+        {
+          "File": "facial/face_serious_01.motion3.json"
+        }
+      ],
+      "w-kanade-tilthead02": [
+        {
+          "File": "motion/w-kanade-tilthead02.motion3.json"
+        }
+      ],
+      "w-normal-armescape02r": [
+        {
+          "File": "motion/w-normal-armescape02r.motion3.json"
+        }
+      ]
+    }
+  },
+  "Groups": [
+    {
+      "Target": "Parameter",
+      "Name": "LipSync",
+      "Ids": [
+        "ParamMouthOpenY"
+      ]
+    },
+    {
+      "Target": "Parameter",
+      "Name": "EyeBlink",
+      "Ids": [
+        "ParamEyeLOpen",
+        "ParamEyeROpen"
+      ]
+    }
+  ]
+}

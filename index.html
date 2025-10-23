@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>PJSK Dialogue Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    html {
+      font-size: 20px;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      background: url("https://s2.loli.net/2025/10/22/MGkmyaZQlfSVszE.webp") 0 0/cover no-repeat;
+      overflow: hidden;
+    }
+
+    .svg-outline {
+      filter: url("#outline");
+    }
+
+    canvas {
+      opacity: 0;
+      transition-property: opacity;
+      transition-duration: 0.6s;
+    }
+  </style>
+</head>
+
+<body>
+  <live2d-viewer-multi id="mfy" src="/mafuyu-live2d/18mafuyu_darkcloth001_3.0_f_t03.model3.json"></live2d-viewer-multi>
+  <live2d-viewer-multi id="knd" src="/kanade-live2d/17kanade_normal_3.1_f_t02.model3.json"></live2d-viewer-multi>
+  <!-- ref: https://tympanus.net/codrops/2019/01/22/svg-filter-effects-outline-text-with-femorphology/ -->
+  <svg width="0" height="0" class="absolute">
+    <filter id="outline">
+      <feMorphology in="SourceAlpha" result="DILATED" operator="dilate" radius="2"></feMorphology>
+
+      <feFlood flood-color="var(--svg-outline-color, #4a4968aa)" flood-opacity="1" result="PINK"></feFlood>
+      <feComposite in="PINK" in2="DILATED" operator="in" result="OUTLINE"></feComposite>
+
+      <feMerge>
+        <feMergeNode in="OUTLINE" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </svg>
+  <div class="dialog-ui fixed z-5 bottom-0 left-0 w-full transition-opacity duration-300 opacity-0">
+    <div class="relative">
+      <div class="absolute bottom-0 left-0 w-full h-full">
+        <div class="w-full h-full" style="background: #1817358f;filter: blur(10px);transform: scale(1.1);"></div>
+      </div>
+      <div class="flex">
+        <div style="flex: 0.172;"></div>
+        <div style="flex: 0.656;">
+          <div class="relative z-5 ml-2">
+            <div class="name svg-outline text-white text-lg"></div>
+          </div>
+          <div class="-mt-2">
+            <div class="w-96 h-2 bg-white rounded-lg mask-right opacity-75"></div>
+          </div>
+          <div class="pt-1 pl-4 pb-6 h-32 box-border">
+            <div class="content svg-outline text-white text-lg whitespace-pre-line"></div>
+          </div>
+        </div>
+        <div style="flex: 0.172;"></div>
+      </div>
+    </div>
+  </div>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.1.0/typed.umd.js'></script>
+  <script src="https://cdn.jsdelivr.net/gh/dylanNew/live2d/webgl/Live2D/lib/live2d.min.js"></script>
+  <script src="./live2dcubismcore.min.js"></script>
+  <script>
+    const makeResponsive = () => {
+      const clamp = (num, lower, upper) =>
+        Math.max(
+          Math.min(Number(num), Math.max(lower, upper)),
+          Math.min(lower, upper)
+        );
+
+      // 基准宽度
+      const baseWidth = 1200;
+
+      // 基准字体大小
+      const baseSize = 16;
+
+      // 最小字体大小
+      const minSize = 10;
+
+      // 设置 rem 函数
+      const setRem = () => {
+        // 当前页面宽度相对于基准宽度的缩放比例
+        const scale = document.documentElement.clientWidth / baseWidth;
+        // 设置目标字体大小
+        const target = baseSize * scale;
+        // 限制字体大小
+        const fontSize = clamp(target, minSize, Infinity);
+        document.documentElement.style.fontSize = `${fontSize}px`;
+      };
+
+      // 执行setRem
+      const doSetRem = () => {
+        setRem();
+        window.addEventListener("resize", setRem);
+      };
+
+      // 还原rem
+      const resetRem = () => {
+        document.documentElement.style.fontSize = `${16}px`;
+        window.removeEventListener("resize", setRem);
+      };
+
+      doSetRem();
+    }
+
+    makeResponsive();
+  </script>
+  <script type="module">
+    import "https://esm.sh/@alphardex/live2d-viewer@1.0.15/dist/live2d-viewer-multi.js";
+
+    const live2dInitialState = [
+      { target: "#mfy", position: { x: "0.34", y: "0.8" }, motion: "w-normal-sigh01" },
+      { target: "#knd", position: { x: "0.66", y: "0.8" }, motion: "w-normal-forward01" }
+    ]
+
+    const dialogList = [
+      {
+        name: "奏",
+        content: `如果这首不足以彻底拯救雪，那么，我还会不断地作曲
+    ——直到能拯救雪为止。`,
+        live2d: [
+          { target: "#knd", motion: "face_serious_01" }
+        ]
+      },
+      {
+        name: "？？？",
+        content: `……你在说什么啊？`,
+        live2d: [
+          { target: "#mfy", motion: "w-normal-forward03" },
+        ]
+      },
+      {
+        name: "奏",
+        content: `我说我会继续作曲。就算这是爸爸给我施下的诅咒也无所谓——`,
+        live2d: [
+          { target: "#knd", motion: "w-normal-forward01" }
+        ]
+      },
+      {
+        name: "奏",
+        content: `我再也不想眼睁睁地看着任何人在我面前自暴自弃了。`,
+        live2d: [
+          { target: "#knd", motion: "w-kanade-tilthead02" }
+        ]
+      },
+      {
+        name: "？？？",
+        content: `但是……但是……！`,
+        live2d: [
+          { target: "#mfy", motion: "w-normal-fidget01" },
+        ]
+      },
+      {
+        name: "？？？",
+        content: `K，其实你也很想抛开一切不是吗？！`,
+        live2d: [
+          { target: "#mfy", motion: "face_baffling_01" },
+        ]
+      },
+      {
+        name: "奏",
+        content: `…………嗯。没错。`,
+        live2d: [
+          { target: "#knd", motion: "w-normal-armescape02r" }
+        ]
+      },
+      {
+        name: "奏",
+        content: `所以，如果有朝一日我陷入绝望，快要被自暴自弃的想法所吞噬……`,
+        live2d: [
+          { target: "#knd", motion: "w-normal-forward01" }
+        ]
+      },
+      {
+        name: "奏",
+        content: `到那时希望雪能对我说一声“还没有找到”。`,
+        live2d: [
+          { target: "#knd", motion: "w-normal-forward01" }
+        ]
+      },
+      {
+        name: "奏",
+        content: `……只要有你的这句话，我就可以继续坚持写下去。`,
+        live2d: [
+          { target: "#knd", motion: "w-kanade-tilthead02" }
+        ]
+      },
+    ];
+
+    let currentDialogId = 0;
+    let dialogLength = dialogList.length;
+
+    let typed = null;
+    let isTyping = false;
+
+    const updateLive2d = (live2d) => {
+      live2d.forEach((item) => {
+        const el = document.querySelector(item.target);
+        const { position, motion } = item;
+        if (position) {
+          const { x, y } = position;
+          el.setAttribute("x", x);
+          el.setAttribute("y", y);
+          el.updatePosition();
+        }
+        if (motion) {
+          el.setMotion(motion);
+        }
+      })
+    }
+
+    const playDialog = (id) => {
+      const activeDialog = dialogList[currentDialogId];
+      if (activeDialog) {
+        document.querySelector(".name").textContent = activeDialog.name;
+        document.querySelector(".content").textContent = "";
+
+        typed = new Typed(".content", {
+          strings: [activeDialog.content],
+          typeSpeed: 30,
+          showCursor: false,
+          onBegin: () => {
+            isTyping = true;
+          },
+          onComplete: () => {
+            isTyping = false;
+          },
+        });
+
+        const { live2d } = activeDialog;
+        if (live2d) {
+          updateLive2d(live2d);
+        }
+      }
+    };
+
+    let isModelLoaded = false;
+    const els = Array.from(document.querySelectorAll('live2d-viewer-multi'));
+    await Promise.all(els.map(el => el.waitForLoad()));
+    isModelLoaded = true;
+
+    updateLive2d(live2dInitialState);
+    setTimeout(() => {
+      document.querySelector("canvas").style.opacity = "1";
+
+      document.querySelector('.dialog-ui').classList.remove('opacity-0');
+      playDialog(currentDialogId);
+    }, 300);
+
+    window.addEventListener("click", () => {
+      if (!isModelLoaded) {
+        return;
+      }
+
+      if (isTyping) {
+        typed.destroy();
+        const activeDialog = dialogList[currentDialogId];
+        document.querySelector(".content").textContent = activeDialog.content;
+        isTyping = false;
+        return;
+      }
+
+      if (currentDialogId + 1 === dialogLength) {
+        currentDialogId = 0;
+      } else {
+        currentDialogId++;
+      }
+
+      playDialog(currentDialogId);
+    });
+  </script>
+
+</body>
+
+</html>
