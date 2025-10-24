@@ -126,7 +126,7 @@
     makeResponsive();
   </script>
   <script type="module">
-    import "https://esm.sh/@alphardex/live2d-viewer@1.0.15/dist/live2d-viewer-multi.js";
+    import "https://esm.sh/@alphardex/live2d-viewer@1.0.17/dist/live2d-viewer-multi.js";
 
     const live2dInitialState = [
       { target: "#mfy", position: { x: "0.34", y: "0.8" }, motion: "w-normal-sigh01" },
@@ -137,9 +137,10 @@
       {
         name: "奏",
         content: `如果这首不足以彻底拯救雪，那么，我还会不断地作曲
-    ——直到能拯救雪为止。`,
+      ——直到能拯救雪为止。`,
         live2d: [
-          { target: "#knd", motion: "face_serious_01" }
+          { target: "#mfy", position: { x: "0.34", y: "0.8" } },
+          { target: "#knd", position: { x: "0.66", y: "0.8" }, motion: "face_serious_01" }
         ]
       },
       {
@@ -205,6 +206,40 @@
           { target: "#knd", motion: "w-kanade-tilthead02" }
         ]
       },
+      {
+        transition: true,
+        showCanvas: false,
+        showUI: false,
+      },
+      {
+        name: "？？？",
+        content: `你真的——会一直为我作曲对吧。`,
+        live2d: [
+          { target: "#mfy", motion: "face_normal_01", position: { x: "0.5" } },
+          { target: "#knd", show: false }
+        ]
+      },
+      {
+        transition: true,
+        showCanvas: false,
+        showUI: false,
+      },
+      {
+        name: "奏",
+        content: `……嗯。`,
+        live2d: [
+          { target: "#mfy", show: false },
+          { target: "#knd", motion: "face_smile_01", position: { x: "0.5" } }
+        ]
+      },
+      {
+        name: "奏",
+        content: `放心吧，雪。 我保证，总有一天一定会拯救你的。`,
+        live2d: [
+          { target: "#mfy", show: false },
+          { target: "#knd", motion: "w-normal-forward01" }
+        ]
+      },
     ];
 
     let currentDialogId = 0;
@@ -212,19 +247,25 @@
 
     let typed = null;
     let isTyping = false;
+    let isTransitioning = false;
 
     const updateLive2d = (live2d) => {
       live2d.forEach((item) => {
         const el = document.querySelector(item.target);
-        const { position, motion } = item;
+        const { position, motion, show } = item;
         if (position) {
           const { x, y } = position;
-          el.setAttribute("x", x);
-          el.setAttribute("y", y);
+          x && el.setAttribute("x", x);
+          y && el.setAttribute("y", y);
           el.updatePosition();
         }
         if (motion) {
           el.setMotion(motion);
+        }
+        if (show === false) {
+          el.hide();
+        } else {
+          el.show();
         }
       })
     }
@@ -232,24 +273,47 @@
     const playDialog = (id) => {
       const activeDialog = dialogList[currentDialogId];
       if (activeDialog) {
-        document.querySelector(".name").textContent = activeDialog.name;
-        document.querySelector(".content").textContent = "";
+        if (activeDialog.name) {
+          document.querySelector(".name").textContent = activeDialog.name;
+          document.querySelector(".content").textContent = "";
 
-        typed = new Typed(".content", {
-          strings: [activeDialog.content],
-          typeSpeed: 30,
-          showCursor: false,
-          onBegin: () => {
-            isTyping = true;
-          },
-          onComplete: () => {
-            isTyping = false;
-          },
-        });
+          typed = new Typed(".content", {
+            strings: [activeDialog.content],
+            typeSpeed: 30,
+            showCursor: false,
+            onBegin: () => {
+              isTyping = true;
+            },
+            onComplete: () => {
+              isTyping = false;
+            },
+          });
+        }
 
         const { live2d } = activeDialog;
         if (live2d) {
           updateLive2d(live2d);
+        }
+
+        const { showCanvas, showUI } = activeDialog;
+        if (showCanvas === false) {
+          document.querySelector("canvas").style.opacity = "0";
+        } else {
+          document.querySelector("canvas").style.opacity = "1";
+        }
+        if (showUI === false) {
+          document.querySelector(".dialog-ui").style.opacity = "0";
+        } else {
+          document.querySelector(".dialog-ui").style.opacity = "1";
+        }
+
+        if (activeDialog.transition) {
+          isTransitioning = true;
+          setTimeout(() => {
+            isTransitioning = false;
+            currentDialogId++;
+            playDialog(currentDialogId);
+          }, 600);
         }
       }
     };
@@ -268,6 +332,10 @@
     }, 1000);
 
     document.body.addEventListener("click", () => {
+      if (isTransitioning) {
+        return;
+      }
+
       if (!isModelLoaded) {
         return;
       }

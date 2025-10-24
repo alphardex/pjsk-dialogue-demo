@@ -26,6 +26,11 @@
         {
           "File": "motion/w-normal-armescape02r.motion3.json"
         }
+      ],
+      "face_smile_01": [
+        {
+          "File": "facial/face_smile_01.motion3.json"
+        }
       ]
     }
   },
