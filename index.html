@@ -240,6 +240,11 @@
           { target: "#knd", motion: "w-normal-forward01" }
         ]
       },
+      {
+        transition: true,
+        showCanvas: false,
+        showUI: false,
+      },
     ];
 
     let currentDialogId = 0;
@@ -268,6 +273,14 @@
           el.show();
         }
       })
+    }
+
+    const nextDialog = () => {
+      if (currentDialogId + 1 === dialogLength) {
+        currentDialogId = 0;
+      } else {
+        currentDialogId++;
+      }
     }
 
     const playDialog = (id) => {
@@ -311,7 +324,7 @@
           isTransitioning = true;
           setTimeout(() => {
             isTransitioning = false;
-            currentDialogId++;
+            nextDialog();
             playDialog(currentDialogId);
           }, 600);
         }
@@ -348,12 +361,7 @@
         return;
       }
 
-      if (currentDialogId + 1 === dialogLength) {
-        currentDialogId = 0;
-      } else {
-        currentDialogId++;
-      }
-
+      nextDialog();
       playDialog(currentDialogId);
     });
   </script>
